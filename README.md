@@ -132,5 +132,3 @@ The signed-in home page shows the timetable below the attendance overview. Admin
 ## Profile photos
 Signed-in users can upload a JPG, PNG or WebP profile picture from **My profile**, up to 2 MB. Image type and dimensions are checked, the image is stored using a randomized filename, and user cards display it when available.
 
-### Interactive Google Maps preview
-Google Maps directions links work without an API key. To embed the interactive driving map inside each route card, create a Google Maps Embed API key, restrict it to Maps Embed API and this site's HTTP referrer, then copy `config/maps.local.example.php` to `config/maps.local.php` and return the key from that file. Google requires a key for every Maps Embed API request; its current usage page lists Maps Embed as no-charge, but a billing-enabled Cloud project is required.
