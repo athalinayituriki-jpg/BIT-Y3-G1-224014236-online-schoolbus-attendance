@@ -1,0 +1,9 @@
+<?php $title='My bookings'; require __DIR__.'/../layout/header.html'; ?>
+<h1>My child’s seat bookings</h1><p class="page-intro">Bookings are visible only to the parent account that registered the child.</p>
+<p><a class="button" href="index.php?page=students">My children</a></p>
+<?php if(!$rows): ?><section class="card"><p>You have no upcoming bus bookings.</p></section><?php else: ?><div class="user-grid"><?php foreach($rows as $r): ?>
+<article class="card booking-card"><div class="user-card-top"><span class="role-badge">Seat <?= (int)$r['seat_number'] ?></span><span class="status-badge active"><?=e(date('D, M j, Y',strtotime($r['travel_date'])))?></span></div><h2><?=e($r['student_name'])?></h2><p><strong><?=e($r['route_name'])?></strong> · <?=e(ucfirst($r['trip_period']))?> <?=e(substr($r['departure_time'],0,5))?> departure, <?=e(substr($r['arrival_time'],0,5))?> arrival</p><p><?=e($r['bus_number'])?> · <?=e($r['plate_number'])?> · Pickup: <?=e($r['parking_location'])?></p>
+<div class="driver-profile-mini"><?php if(!empty($r['driver_avatar'])): ?><img src="uploads/avatars/<?=e(rawurlencode($r['driver_avatar']))?>" alt="Driver profile photo"><?php else: ?><span class="driver-avatar-empty">Driver</span><?php endif; ?><div><strong><?=e($r['driver_name']??'Driver not assigned')?></strong><?php if(!empty($r['driver_phone'])): ?><a href="tel:<?=e($r['driver_phone'])?>"><?=e($r['driver_phone'])?></a><?php else: ?><span>Phone contact not added yet</span><?php endif; ?></div></div>
+<?php if(strtotime($r['travel_date'].' '.$r['departure_time'])>time()): ?><form method="post" action="index.php?page=booking-cancel" data-confirm="Cancel this seat booking?"><?=csrf_field()?><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="secondary" type="submit">Cancel booking</button></form><?php endif; ?></article>
+<?php endforeach; ?></div><?php endif; ?>
+<?php require __DIR__.'/../layout/footer.html'; ?>

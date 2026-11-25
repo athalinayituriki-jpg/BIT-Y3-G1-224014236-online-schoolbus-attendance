@@ -1,0 +1,13 @@
+<?php $title=$entry['id']?'Edit travel time':'Add travel time'; require __DIR__.'/../layout/header.html'; ?>
+<h1><?= e($title) ?></h1><p class="page-intro">Set the daily departure and arrival times, the road route, its start, pickup/parking point and school destination.</p>
+<section class="card narrow"><form method="post" action="index.php?page=schedule-save"><?= csrf_field() ?><input type="hidden" name="id" value="<?=(int)$entry['id']?>">
+<label>Day of the week<select name="day_of_week" required><?php foreach($days as $day): ?><option value="<?=e($day)?>" <?=$entry['day_of_week']===$day?'selected':''?>><?=e($day)?></option><?php endforeach; ?></select></label>
+<label>Assigned bus<select name="bus_id" required><option value="">Choose a bus</option><?php foreach($buses as $bus): ?><option value="<?=(int)$bus['id']?>" <?=(int)$entry['bus_id']===(int)$bus['id']?'selected':''?>><?=e($bus['bus_number'])?></option><?php endforeach; ?></select></label><label>Route name<input name="route_name" maxlength="100" required value="<?=e($entry['route_name'])?>" placeholder="For example, Nyamirambo morning route"></label>
+<label>Start location<input name="origin_location" maxlength="180" required value="<?=e($entry['origin_location'])?>" placeholder="Street, landmark or area"></label>
+<label>Parking / pickup point<input name="parking_location" maxlength="180" required value="<?=e($entry['parking_location'])?>" placeholder="Where the bus stops for pickup"></label>
+<label>Destination<input name="destination_location" maxlength="180" required value="<?=e($entry['destination_location'])?>" placeholder="School name and address"></label>
+<label>Departure time<input type="time" name="departure_time" required value="<?=e(substr($entry['departure_time'],0,5))?>"></label>
+<label>Arrival time<input type="time" name="arrival_time" required value="<?=e(substr($entry['arrival_time'],0,5))?>"></label><label>Evening departure / return time <small>(optional)</small><input type="time" name="evening_departure_time" value="<?=e(substr((string)($entry['evening_departure_time']??''),0,5))?>"></label><label>Evening arrival time <small>(optional)</small><input type="time" name="evening_arrival_time" value="<?=e(substr((string)($entry['evening_arrival_time']??''),0,5))?>"></label>
+<label>Road route notes<input name="route_description" maxlength="500" required value="<?=e($entry['route_description'])?>" placeholder="Roads and pickup areas in order"></label>
+<button type="submit">Save timetable</button> <a class="button secondary" href="index.php?page=schedules">Cancel</a></form></section>
+<?php require __DIR__.'/../layout/footer.html'; ?>

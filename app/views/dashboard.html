@@ -1,0 +1,20 @@
+<?php $title='Home'; require __DIR__.'/layout/header.html'; $routeDate=$routeDate??date('Y-m-d'); ?>
+<section class="dashboard-hero">
+  <div><p class="eyebrow">ONLINE SCHOOL BUS ATTENDANCE</p><h1>Welcome, <?=e($_SESSION['user']['full_name'])?></h1><p>Role: <?=e($_SESSION['user']['role'])?> - Keep every school journey organized and on time.</p></div>
+  <a class="button" href="index.php?page=schedules">View travel timetable</a>
+</section>
+<div class="grid"><div class="card stat-card"><p>Students</p><h2><?=$counts['students']?></h2></div><div class="card stat-card"><p>School buses</p><h2><?=$counts['buses']?></h2></div><div class="card stat-card"><p>Attendance records</p><h2><?=$counts['attendance']?></h2></div></div>
+<section class="public-buses"><div class="schedule-heading"><div><p class="eyebrow">OUR FLEET</p><h2>School buses</h2><p>Bus details and routes are available to all signed-in users.</p></div><?php if($_SESSION['user']['role']==='admin'): ?><a class="button" href="index.php?page=bus-create">Add a bus</a><?php endif; ?></div><?php if(!$fleetRows): ?><div class="schedule-empty"><p>No buses have been added yet.</p></div><?php else: ?><div class="bus-gallery"><?php foreach($fleetRows as $bus): ?><article class="bus-public-card"><?php if(!empty($bus['photo_filename'])): ?><img src="uploads/buses/<?=e($bus['photo_filename'])?>" alt="Bus <?=e($bus['bus_number'])?>"><?php else: ?><div class="bus-photo-placeholder">School bus</div><?php endif; ?><div class="bus-public-info"><h3><?=e($bus['bus_number'])?></h3><p><strong>Plate:</strong> <?=e($bus['plate_number'])?></p><p><strong>Driver:</strong> <?=e($bus['driver_name']??'Unassigned')?></p><p><strong>Route:</strong> <?=e($bus['route_name']??'Not assigned')?></p></div></article><?php endforeach; ?></div><?php endif; ?></section><div class="card"><h2>Quick actions</h2><p><a class="button" href="index.php?page=students">View students</a> <a class="button" href="index.php?page=attendance">View attendance</a>
+<?php if(in_array($_SESSION['user']['role'],['admin','driver'],true)): ?> <a class="button" href="index.php?page=attendance-create">Record attendance</a><?php endif; ?></p></div>
+<section class="schedule-home" id="today-routes">
+  <div class="schedule-heading"><div><p class="eyebrow">TODAY | <?=e($routeDayName)?>, <?=e(date('F j',strtotime($routeDate)))?></p><h2><?= $isClosedDay?'Today is closed':'Today’s routes and travel times' ?></h2><p>Scheduled morning and evening travel times for today. Times are shown as scheduled.</p></div>
+  <?php if($_SESSION['user']['role']==='admin'): ?><a class="button" href="index.php?page=schedules">Manage weekly timetable</a><?php endif; ?></div>
+  <?php if($isClosedDay): ?><section class="closed-day"><strong>CLOSED</strong><h3>No school bus travel on <?=e($routeDayName)?></h3><p>Travel service runs Monday to Friday.</p></section>
+  <?php elseif(!$scheduleRows): ?><div class="schedule-empty"><h3>No routes scheduled for today.</h3><p>Check the timetable or contact the administrator.</p></div>
+  <?php else: ?><div class="schedule-list">
+  <?php foreach($scheduleRows as $entry): ?>
+  <article class="schedule-item dashboard-schedule-item"><div class="schedule-day"><?=e($entry['day_of_week'])?></div><div class="schedule-route"><h3><?=e($entry['route_name'])?></h3><p class="travel-range"><strong>Morning:</strong> <?=e(substr($entry['departure_time'],0,5))?>-<?=e(substr($entry['arrival_time'],0,5))?> <span class="trip-duration"><?=e(travel_duration($entry['departure_time'],$entry['arrival_time']))?> travel</span></p><?php if(!empty($entry['evening_departure_time'])&&!empty($entry['evening_arrival_time'])): ?><p class="travel-range"><strong>Evening:</strong> <?=e(substr($entry['evening_departure_time'],0,5))?>-<?=e(substr($entry['evening_arrival_time'],0,5))?> <span class="trip-duration"><?=e(travel_duration($entry['evening_departure_time'],$entry['evening_arrival_time']))?> travel</span></p><?php endif; ?></div><?php require __DIR__.'/schedules/route-summary.html'; ?></article>
+  <?php endforeach; ?></div><?php endif; ?>
+</section>
+<?php require __DIR__.'/layout/footer.html'; ?>
+

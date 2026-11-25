@@ -1,0 +1,26 @@
+<?php $title='My Profile'; require __DIR__.'/layout/header.html'; ?>
+<h1>My profile</h1>
+<section class="profile-photo-placeholder">
+  <div class="profile-avatar" aria-hidden="true"><?php if (!empty($profile['avatar_filename'])): ?><img src="uploads/avatars/<?=e(rawurlencode($profile['avatar_filename']))?>" alt=""><?php else: ?><span>IMG</span><?php endif; ?></div>
+  <div class="photo-upload-copy"><strong>Profile photo</strong><p>Choose a JPG, PNG or WebP image, up to 2 MB.</p>
+    <form method="post" action="index.php?page=profile" enctype="multipart/form-data" class="photo-upload-form"><?=csrf_field()?>
+      <input type="hidden" name="action" value="photo"><label class="file-label">Choose photo<input type="file" name="profile_photo" accept="image/jpeg,image/png,image/webp" required></label>
+      <button type="submit">Upload photo</button>
+    </form>
+  </div>
+</section>
+<div class="profile-grid">
+<section class="card profile-card"><div class="section-heading"><span class="section-icon profile-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg></span><div><h2>Personal details</h2><p>Update your name and email address.</p></div></div>
+<form method="post" action="index.php?page=profile"><?= csrf_field() ?><input type="hidden" name="action" value="profile">
+<label>Full name<input name="full_name" maxlength="120" required value="<?=e($profile['full_name'])?>"></label>
+<label>Email address<input type="email" name="email" required value="<?=e($profile['email'])?>"></label><label>Phone contact<input type="tel" name="phone_number" maxlength="30" value="<?=e($profile['phone_number']??'')?>" placeholder="For example, +250 7xx xxx xxx"></label>
+<label>Account role<input value="<?=e(ucfirst($profile['role']))?>" disabled></label>
+<button type="submit">Save profile</button></form></section>
+<section class="card password-card"><div class="section-heading"><span class="section-icon password-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 1 1 8 0v3"></path><path d="M12 14v3"></path></svg></span><div><h2>Change password</h2><p>Use your current password to set a new one.</p></div></div>
+<form method="post" action="index.php?page=profile"><?= csrf_field() ?><input type="hidden" name="action" value="password">
+<label>Current password<input type="password" name="current_password" autocomplete="current-password" required></label>
+<label>New password<input type="password" name="new_password" minlength="8" autocomplete="new-password" required></label>
+<label>Confirm new password<input type="password" name="confirm_password" minlength="8" autocomplete="new-password" required></label>
+<button type="submit">Change password</button></form></section>
+</div>
+<?php require __DIR__.'/layout/footer.html'; ?>

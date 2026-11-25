@@ -1,0 +1,4 @@
+<?php $title='Attendance'; require __DIR__.'/../layout/header.html'; ?>
+<h1>Attendance records</h1><?php if(in_array($_SESSION['user']['role'],['admin','driver'],true)): ?><p><a class="button" href="index.php?page=attendance-create">Record attendance</a></p><?php endif; ?>
+<div class="table-wrap"><table><tr><th>Student</th><th>Code</th><th>Bus</th><th>Status</th><th>Time</th><th>Recorded by</th></tr><?php foreach($rows as $r): ?><tr><td><?=e($r['student_name'])?></td><td><?=e($r['student_code'])?></td><td><?=e($r['bus_number'])?></td><td><?=e($r['status'])?></td><td><?=e($r['event_time'])?></td><td><?=e($r['marked_by'])?></td></tr><?php endforeach; ?></table></div>
+<?php require __DIR__.'/../layout/footer.html'; ?>

@@ -1,0 +1,6 @@
+<?php $title='Record attendance'; require __DIR__.'/../layout/header.html'; ?>
+<section class="card narrow"><h1>Record attendance</h1><form method="post" action="index.php?page=attendance-mark"><?=csrf_field()?>
+<label>Find student<input id="attendanceSearch" type="search" placeholder="Search by name or code" autocomplete="off"></label><div id="attendanceSearchResults" class="student-search-results" aria-live="polite" hidden></div>
+<label>Student<select name="student_id" required><option value="" selected disabled>Choose a student</option><?php foreach($students as $s): ?><option value="<?=(int)$s['id']?>"><?=e($s['full_name'].' ('.$s['student_code'].')')?></option><?php endforeach; ?></select></label>
+<label>Status<select name="status" required><option value="boarded">Boarded</option><option value="alighted">Alighted</option><option value="absent">Absent</option></select></label><button>Save attendance</button></form></section>
+<?php require __DIR__.'/../layout/footer.html'; ?>

@@ -1,0 +1,8 @@
+<?php $title=$bus?'Edit bus':'Add bus'; require __DIR__.'/../layout/header.html'; ?>
+<section class="card narrow"><h1><?=e($title)?></h1><form method="post" enctype="multipart/form-data" action="index.php?page=bus-save"><?=csrf_field()?><input type="hidden" name="id" value="<?=(int)($bus['id']??0)?>">
+<label>Bus number<input name="bus_number" required maxlength="30" value="<?=e($bus['bus_number']??'')?>"></label><label>Plate number<input name="plate_number" required maxlength="20" value="<?=e($bus['plate_number']??'')?>"></label>
+<label>Capacity<input type="number" name="capacity" min="1" required value="<?=e((string)($bus['capacity']??''))?>"></label>
+<label>Driver<select name="driver_id"><option value="">Unassigned</option><?php foreach($drivers as $d): ?><option value="<?=(int)$d['id']?>" <?=((int)($bus['driver_id']??0)===(int)$d['id']?'selected':'')?>><?=e($d['full_name'])?></option><?php endforeach; ?></select></label>
+<label>Route<select name="route_id"><option value="">Choose a route</option><?php foreach($routes as $route): ?><option value="<?=(int)$route['id']?>" <?=((int)($bus['route_id']??0)===(int)$route['id']?'selected':'')?>><?=e($route['route_name'].' — '.$route['day_of_week'].' ('.$route['origin_location'].' to '.$route['destination_location'].')')?></option><?php endforeach; ?></select></label>
+<label>Bus photo<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" <?=empty($bus['photo_filename'])?'required':''?>></label><?php if(!empty($bus['photo_filename'])): ?><img class="bus-photo-preview" src="uploads/buses/<?=e($bus['photo_filename'])?>" alt="Current bus photo"><?php endif; ?><button>Save bus</button></form></section>
+<?php require __DIR__.'/../layout/footer.html'; ?>

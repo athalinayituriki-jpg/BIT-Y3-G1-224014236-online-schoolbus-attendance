@@ -1,0 +1,4 @@
+</main>
+<footer class="site-footer"><span>© <?= date('Y') ?> School Bus Attendance</span><?php if (($_SESSION['user']['role'] ?? '') === 'admin'): ?> <a href="index.php?page=users">Manage all users</a><?php endif; ?></footer>
+<script src="assets/app.js"></script>
+</body></html>

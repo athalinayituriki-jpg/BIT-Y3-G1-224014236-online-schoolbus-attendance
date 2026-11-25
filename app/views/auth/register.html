@@ -1,0 +1,5 @@
+<?php $title='Register'; require __DIR__.'/../layout/header.html'; ?>
+<section class="card narrow"><h1>Create account</h1><p>The first account registered in a new, empty database automatically becomes the administrator. All later public registrations become parent accounts.</p>
+<form method="post"><?= csrf_field() ?><label>Full name<input name="full_name" maxlength="120" required></label>
+<label>Email<input type="email" name="email" required></label><label>Password<input type="password" name="password" minlength="8" required></label><button>Register</button></form></section>
+<?php require __DIR__.'/../layout/footer.html'; ?>

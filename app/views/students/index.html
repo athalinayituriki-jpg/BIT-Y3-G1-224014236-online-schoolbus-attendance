@@ -1,0 +1,19 @@
+<?php $title=$_SESSION['user']['role']==='parent'?'My children':'Students'; require __DIR__.'/../layout/header.html'; ?>
+<?php if($_SESSION['user']['role']==='parent'): ?>
+<h1>My children</h1><p class="page-intro">Only students registered to your parent account appear here.</p>
+<p><a class="button" href="index.php?page=bookings">My bookings</a></p>
+<?php if(!$rows): ?><section class="card"><p>No students are linked to this parent account yet. Contact the administrator to register your child.</p></section><?php else: ?><div class="user-grid"><?php foreach($rows as $r): ?>
+<article class="card child-card"><h2><?=e($r['full_name'])?></h2><p><?=e($r['student_code'])?> | <?=e($r['grade'])?></p>
+<section class="bus-detail-card"><h3>Assigned bus</h3><p><strong><?=e($r['bus_number']??'Bus not assigned')?></strong><?php if(!empty($r['plate_number'])): ?> | <?=e($r['plate_number'])?><?php endif; ?></p><?php if(!empty($r['capacity'])): ?><p><?= (int)$r['capacity'] ?> numbered seats</p><?php endif; ?></section>
+<section class="driver-profile"><h3>Driver profile and contact</h3><div class="driver-profile-mini"><?php if(!empty($r['driver_avatar'])): ?><img src="uploads/avatars/<?=e(rawurlencode($r['driver_avatar']))?>" alt="<?=e($r['driver_name']??'Driver')?> profile photo"><?php else: ?><span class="driver-avatar-empty">Driver</span><?php endif; ?><div><strong><?=e($r['driver_name']??'Driver not assigned')?></strong><?php if(!empty($r['driver_phone'])): ?><a href="tel:<?=e($r['driver_phone'])?>"><?=e($r['driver_phone'])?></a><?php else: ?><span>Phone contact has not been added.</span><?php endif; ?><?php if(!empty($r['driver_email'])): ?><a href="mailto:<?=e($r['driver_email'])?>"><?=e($r['driver_email'])?></a><?php endif; ?></div></div></section>
+<div class="child-actions"><a class="button" href="index.php?page=booking-form&amp;student_id=<?=(int)$r['id']?>">Book a seat</a></div></article>
+<?php endforeach; ?></div><?php endif; ?>
+<?php else: ?>
+<h1>Students</h1><?php if($_SESSION['user']['role']==='admin'): ?><p><a class="button" href="index.php?page=student-form">Add student</a></p><?php endif; ?>
+<?php if(in_array($_SESSION['user']['role'], ['admin','driver'], true)): ?><label>Search students <input id="studentSearch" type="search" placeholder="Type a name or student code" autocomplete="off"></label><div id="searchResults" class="student-search-results" aria-live="polite" hidden></div><?php endif; ?>
+<div class="table-wrap"><table class="student-table"><thead><tr><th>Name</th><th>Code</th><th>Grade</th><th>Bus</th><th>Parent</th><?php if($_SESSION['user']['role']==='admin'): ?><th>Actions</th><?php endif; ?></tr></thead><tbody>
+<?php foreach($rows as $r): ?><tr data-student-row><td><?=e($r['full_name'])?></td><td><?=e($r['student_code'])?></td><td><?=e($r['grade'])?></td><td><?=e($r['bus_number']??'—')?></td><td><?=e($r['parent_name']??'—')?></td>
+<?php if($_SESSION['user']['role']==='admin'): ?><td><a class="button secondary" href="index.php?page=student-form&amp;id=<?=(int)$r['id']?>">Edit</a><form class="inline" method="post" action="index.php?page=student-delete" data-confirm="Delete this student?"><?=csrf_field()?><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="danger">Delete</button></form></td><?php endif; ?></tr><?php endforeach; ?>
+</tbody></table><p class="student-search-empty" data-no-students hidden>No students match this search.</p></div>
+<?php endif; ?>
+<?php require __DIR__.'/../layout/footer.html'; ?>

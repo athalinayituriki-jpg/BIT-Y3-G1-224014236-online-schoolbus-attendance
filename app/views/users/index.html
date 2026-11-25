@@ -1,0 +1,26 @@
+<?php $title='User Administration'; require __DIR__.'/../layout/header.html'; ?>
+<h1>All registered users</h1><p class="page-intro">Administrator control panel: create, edit, activate, deactivate and delete accounts.</p>
+<section class="card create-user-card"><div class="section-heading"><span class="section-icon">＋</span><div><h2>Create user</h2><p>Add a driver, parent or another administrator.</p></div></div>
+<form method="post" action="index.php?page=user-save" class="form-grid"><?=csrf_field()?>
+<label>Full name<input name="full_name" required maxlength="120"></label><label>Email<input type="email" name="email" required maxlength="190"></label><label>Phone contact<input type="tel" name="phone_number" maxlength="30" placeholder="Driver contact number"></label>
+<label>Temporary password<input type="password" name="password" required minlength="8"></label><label>Role<select name="role"><option value="parent">Parent</option><option value="driver">Driver</option><option value="admin">Administrator</option></select></label>
+<button type="submit">Create account</button></form></section>
+<div class="user-grid">
+<?php foreach($rows as $r): ?>
+<article class="user-card <?=e($r['role'])?>">
+<div class="user-card-top"><span class="role-badge <?=e($r['role'])?>"><?=e(ucfirst($r['role']))?></span><span class="status-badge <?=$r['is_active']?'active':'inactive'?>"><?=$r['is_active']?'Active':'Inactive'?></span></div>
+<div class="user-identity"><?php if (!empty($r['avatar_filename'])): ?><img class="user-avatar user-avatar-image" src="uploads/avatars/<?=e(rawurlencode($r['avatar_filename']))?>" alt="<?=e($r['full_name'])?> profile photo"><?php else: ?><span class="user-avatar" aria-label="Profile photo not set">IMG</span><?php endif; ?><div><h2><?=e($r['full_name'])?></h2><?php if($r['role']==='driver'): ?><p class="photo-note">Drivers can confirm boarding and drop-off attendance with Record attendance.</p><?php endif; ?><p class="photo-note">Upload a photo from My profile</p></div></div><p class="user-email"><?=e($r['email'])?></p><?php if(!empty($r['phone_number'])): ?><p class="user-email"><?=e($r['phone_number'])?></p><?php endif; ?><p class="user-meta">Account #<?= (int)$r['id'] ?> · Joined <?=e($r['created_at'])?></p>
+<details class="edit-user"><summary>Edit account / reset password</summary>
+<form method="post" action="index.php?page=user-save"><?=csrf_field()?>
+<input type="hidden" name="id" value="<?=(int)$r['id']?>">
+<label>Full name<input name="full_name" value="<?=e($r['full_name'])?>" maxlength="120" required></label>
+<label>Email<input type="email" name="email" value="<?=e($r['email'])?>" required></label><label>Phone contact<input type="tel" name="phone_number" maxlength="30" value="<?=e($r['phone_number']??'')?>"></label>
+<label>Role<select name="role"><option value="parent" <?=$r['role']==='parent'?'selected':''?>>Parent</option><option value="driver" <?=$r['role']==='driver'?'selected':''?>>Driver</option><option value="admin" <?=$r['role']==='admin'?'selected':''?>>Administrator</option></select></label>
+<label>New password <small>(leave blank to keep current)</small><input type="password" name="password" minlength="8"></label>
+<button type="submit">Save changes</button></form></details>
+<div class="user-actions"><?php if($r['role']==='driver'): ?><a class="button" href="index.php?page=attendance-create">Record attendance</a><?php endif; ?><form method="post" action="index.php?page=user-toggle"><?=csrf_field()?><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="secondary" type="submit"><?=$r['is_active']?'Deactivate':'Activate'?></button></form>
+<?php if((int)$r['id'] !== (int)$_SESSION['user']['id']): ?><form method="post" action="index.php?page=user-delete" data-confirm="Delete this user account? Linked records may prevent deletion."><?=csrf_field()?><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="danger" type="submit">Delete user</button></form><?php else: ?><span class="you-label">Your account</span><?php endif; ?></div>
+</article>
+<?php endforeach; ?>
+</div>
+<?php require __DIR__.'/../layout/footer.html'; ?>

@@ -1,0 +1,27 @@
+<?php
+$hasMapRoute = !empty($entry['origin_location']) && !empty($entry['parking_location']) && !empty($entry['destination_location']);
+if (!$hasMapRoute) return;
+$mapsKey = defined('GOOGLE_MAPS_EMBED_API_KEY') ? GOOGLE_MAPS_EMBED_API_KEY : '';
+$mapUrl='https://www.google.com/maps/dir/?api=1&origin='.rawurlencode($entry['origin_location']).'&destination='.rawurlencode($entry['destination_location']).'&waypoints='.rawurlencode($entry['parking_location']).'&travelmode=driving';
+$embedUrl='https://www.google.com/maps/embed/v1/directions?key='.rawurlencode($mapsKey).'&origin='.rawurlencode($entry['origin_location']).'&destination='.rawurlencode($entry['destination_location']).'&waypoints='.rawurlencode($entry['parking_location']).'&mode=driving';
+?>
+<div class="route-map-summary">
+  <div class="route-map-top"><span class="map-label">ROUTE SUMMARY</span><span class="maps-brand">Google Maps directions</span></div>
+  <div class="route-map-visual" role="img" aria-label="Illustrative street map from the route start through pickup to the school">
+    <svg class="route-art-line" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-hidden="true"><path class="route-art-underlay" d="M105 158 C235 158 282 58 450 58 S650 158 842 158"/><path class="route-art-stroke" d="M105 158 C235 158 282 58 450 58 S650 158 842 158"/></svg>
+    <span class="route-art-point route-art-start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4.5 8-12a8 8 0 1 0-16 0c0 7.5 8 12 8 12Z"/><circle cx="12" cy="10" r="2.7"/></svg><b>START</b></span>
+    <span class="route-art-point route-art-parking"><i>P</i><b>PICKUP</b></span>
+    <span class="route-art-point route-art-destination"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4.5 8-12a8 8 0 1 0-16 0c0 7.5 8 12 8 12Z"/><circle cx="12" cy="10" r="2.7"/></svg><b>SCHOOL</b></span>
+  </div>
+  <div class="route-map-stops">
+    <div class="route-stop"><svg class="location-marker" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4.5 8-12a8 8 0 1 0-16 0c0 7.5 8 12 8 12Z"/><circle cx="12" cy="10" r="2.7"/></svg><span><small>START</small><strong><?=e($entry['origin_location'])?></strong></span></div>
+    <span class="route-connector" aria-hidden="true"></span>
+    <div class="route-stop parking-stop"><span class="parking-marker" aria-label="Parking and pickup point">P</span><span><small>PARKING / PICKUP</small><strong><?=e($entry['parking_location'])?></strong></span></div>
+    <span class="route-connector" aria-hidden="true"></span>
+    <div class="route-stop"><svg class="location-marker destination-marker" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4.5 8-12a8 8 0 1 0-16 0c0 7.5 8 12 8 12Z"/><circle cx="12" cy="10" r="2.7"/></svg><span><small>SCHOOL DESTINATION</small><strong><?=e($entry['destination_location'])?></strong></span></div>
+  </div>
+  <?php if ($mapsKey !== ''): ?><iframe class="google-map-frame" title="Driving map for <?=e($entry['route_name'])?>" src="<?=e($embedUrl)?>" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <?php endif; ?>
+  <p class="route-road-notes"><?=e($entry['route_description'])?></p>
+  <a class="maps-link" href="<?=e($mapUrl)?>" target="_blank" rel="noopener noreferrer">Open driving route in Google Maps <span aria-hidden="true">&rarr;</span></a>
+</div>

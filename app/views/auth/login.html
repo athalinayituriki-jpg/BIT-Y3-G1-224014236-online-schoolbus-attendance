@@ -1,0 +1,6 @@
+<?php $title='Login'; require __DIR__.'/../layout/header.html'; ?>
+<section class="card narrow"><h1>Login</h1><form method="post"><?= csrf_field() ?>
+<label>Email<input type="email" name="email" required autocomplete="email"></label>
+<label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+<button>Login</button></form><p>New user? <a href="index.php?page=register">Create an account</a></p></section>
+<?php require __DIR__.'/../layout/footer.html'; ?>
