@@ -63,3 +63,10 @@ html,body,button,input,select,textarea,table,th,td,h1,h2,h3,h4,h5,h6,p,a,label,s
 
 /* Keep the password heading icon and text from overlapping on narrow cards. */
 .section-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.section-heading>div{min-width:0;flex:1}.section-heading h2{font-size:clamp(1.2rem,4vw,1.55rem);overflow-wrap:anywhere}.section-heading p{overflow-wrap:anywhere}
+/* Profile section headings stay inside their cards on small screens. */
+.profile-card,.password-card{min-width:0}
+.section-heading{min-width:0;align-items:flex-start}
+.section-heading .section-icon{flex:0 0 42px;overflow:hidden}
+.section-heading>div{min-width:0;flex:1}
+.section-heading h2,.section-heading p{max-width:100%;overflow-wrap:anywhere}
+@media(max-width:480px){.section-heading{gap:10px}.section-heading h2{font-size:1.15rem;line-height:1.25}.section-heading p{font-size:.9rem;line-height:1.4}}
